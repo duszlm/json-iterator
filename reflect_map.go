@@ -2,11 +2,12 @@ package jsoniter
 
 import (
 	"fmt"
-	"github.com/modern-go/reflect2"
 	"io"
 	"reflect"
 	"sort"
 	"unsafe"
+
+	"github.com/modern-go/reflect2"
 )
 
 func decoderOfMap(ctx *ctx, typ reflect2.Type) ValDecoder {
@@ -337,6 +338,11 @@ type encodedKV struct {
 	keyValue []byte
 }
 
-func (sv encodedKeyValues) Len() int           { return len(sv) }
-func (sv encodedKeyValues) Swap(i, j int)      { sv[i], sv[j] = sv[j], sv[i] }
-func (sv encodedKeyValues) Less(i, j int) bool { return sv[i].key < sv[j].key }
+func (sv encodedKeyValues) Len() int      { return len(sv) }
+func (sv encodedKeyValues) Swap(i, j int) { sv[i], sv[j] = sv[j], sv[i] }
+func (sv encodedKeyValues) Less(i, j int) bool {
+	if len(sv[i].key) < len(sv[j].key) {
+		return true
+	}
+	return sv[i].key < sv[j].key
+}
