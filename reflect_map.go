@@ -5,6 +5,7 @@ import (
 	"io"
 	"reflect"
 	"sort"
+	"strconv"
 	"unsafe"
 
 	"github.com/modern-go/reflect2"
@@ -341,8 +342,15 @@ type encodedKV struct {
 func (sv encodedKeyValues) Len() int      { return len(sv) }
 func (sv encodedKeyValues) Swap(i, j int) { sv[i], sv[j] = sv[j], sv[i] }
 func (sv encodedKeyValues) Less(i, j int) bool {
-	if len(sv[i].key) < len(sv[j].key) {
-		return true
+	isIntI, intI := IsNumeric(sv[i].key)
+	isIntJ, intJ := IsNumeric(sv[j].key)
+	if isIntI && isIntJ {
+		return intI < intJ
 	}
 	return sv[i].key < sv[j].key
+}
+
+func IsNumeric(s string) (bool, int) {
+	a, err := strconv.Atoi(s)
+	return err == nil, a
 }
