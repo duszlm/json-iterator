@@ -342,15 +342,10 @@ type encodedKV struct {
 func (sv encodedKeyValues) Len() int      { return len(sv) }
 func (sv encodedKeyValues) Swap(i, j int) { sv[i], sv[j] = sv[j], sv[i] }
 func (sv encodedKeyValues) Less(i, j int) bool {
-	isIntI, intI := IsNumeric(sv[i].key)
-	isIntJ, intJ := IsNumeric(sv[j].key)
-	if isIntI && isIntJ {
-		return intI < intJ
+	numI, errI := strconv.Atoi(sv[i].key)
+	numJ, errJ := strconv.Atoi(sv[j].key)
+	if errI == nil && errJ == nil {
+		return numI < numJ
 	}
 	return sv[i].key < sv[j].key
-}
-
-func IsNumeric(s string) (bool, int) {
-	a, err := strconv.Atoi(s)
-	return err == nil, a
 }
