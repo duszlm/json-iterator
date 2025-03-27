@@ -1,4 +1,4 @@
-module github.com/easycody/json-iterator
+module github.com/duszlm/json-iterator
 
 go 1.12
 
